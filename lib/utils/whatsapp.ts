@@ -57,7 +57,7 @@ ${itemsList}
 
 export function generateWhatsAppUrl(
   payload: WhatsAppOrderPayload,
-  supportPhone = process.env.NEXT_PUBLIC_STORE_WHATSAPP || "201012345678"
+  supportPhone = process.env.NEXT_PUBLIC_STORE_WHATSAPP || "201068808559"
 ): string {
   const cleanPhone = supportPhone.replace(/[^0-9]/g, "");
   const message = buildWhatsAppOrderMessage(payload);

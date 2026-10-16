@@ -2,9 +2,15 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ShoppingBag, Search, Stethoscope, Phone, ShieldCheck } from "lucide-react";
+import {
+  ShoppingBag,
+  Search,
+  Stethoscope,
+  Phone,
+  ShieldCheck,
+  Lock,
+} from "lucide-react";
 import { useCartStore } from "@/lib/store/use-cart-store";
-import { Button } from "@/components/ui/button";
 
 interface NavbarProps {
   onSearchClick?: () => void;
@@ -26,15 +32,19 @@ export function Navbar({ onSearchClick, searchQuery, onSearchChange }: NavbarPro
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90 transition-colors">
       {/* Top Banner Notice */}
-      <div className="bg-gradient-to-r from-teal-700 via-cyan-700 to-teal-800 px-4 py-1.5 text-center text-xs font-medium text-white flex items-center justify-center gap-4">
-        <span className="flex items-center gap-1.5">
+      <div className="bg-gradient-to-r from-teal-800 via-cyan-800 to-slate-900 px-4 py-1.5 text-center text-xs font-medium text-white flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center gap-2">
           <ShieldCheck className="h-3.5 w-3.5 text-teal-300" />
-          مستلزمات وأدوات طب أسنان أصلية معتمدة
-        </span>
-        <span className="hidden sm:inline-block opacity-40">|</span>
-        <span className="hidden sm:flex items-center gap-1">
-          شحن سريع لجميع محافظات مصر 🇪🇬
-        </span>
+          <span>مستلزمات وأدوات طب أسنان أصلية معتمدة • شحن سريع لجميع محافظات مصر 🇪🇬</span>
+        </div>
+
+        <Link
+          href="/admin/login"
+          className="flex items-center gap-1.5 text-[11px] text-cyan-200 hover:text-white font-semibold transition-colors bg-white/10 hover:bg-white/20 px-2.5 py-0.5 rounded-lg"
+        >
+          <Lock className="h-3 w-3" />
+          <span>لوحة التحكم (الإدارة)</span>
+        </Link>
       </div>
 
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -84,12 +94,12 @@ export function Navbar({ onSearchClick, searchQuery, onSearchChange }: NavbarPro
             <Search className="h-5 w-5" />
           </button>
 
-          {/* Quick WhatsApp contact */}
+          {/* Direct WhatsApp contact */}
           <a
-            href="https://wa.me/201012345678"
+            href="https://wa.me/201068808559"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden lg:flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 px-3 py-2 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 hover:bg-emerald-100 transition-colors"
+            className="hidden sm:flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 px-3 py-2 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 hover:bg-emerald-100 transition-colors"
           >
             <Phone className="h-3.5 w-3.5" />
             <span>طلب فوري واتساب</span>
