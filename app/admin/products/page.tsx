@@ -11,7 +11,8 @@ import {
   AlertCircle,
   Eye,
   RefreshCw,
-  Sparkles,
+  Wrench,
+  ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Product } from "@/types";
@@ -21,6 +22,17 @@ import { formatCurrency } from "@/lib/utils/formatters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
+const categorySlugMap: Record<string, string> = {
+  "أدوات جراحة وخلع": "surgical-instruments",
+  "حشوات وعلاج جذور": "restorative-endodontics",
+  "فحص وتشخيص ولثة": "diagnostic-periodontics",
+  "قبضات وتوربينات وأجهزة": "handpieces-equipment",
+  "بنج وتخدير موضعي": "anesthesia-syringes",
+  "طبعات وتركيبات وتثبيت": "impression-prosthodontics",
+  "تقويم الأسنان": "orthodontics",
+  "تعقيم ومكافحة عدوى": "sterilization-infection-control",
+  "مستهلكات ووقايات العيادة": "disposables",
+};
 
 export default function AdminProductsPage() {
   const [products, setProducts] = React.useState<Product[]>(initialMockProducts);
@@ -39,8 +51,8 @@ export default function AdminProductsPage() {
   const [stock, setStock] = React.useState("");
   const [imageUrl, setImageUrl] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [material, setMaterial] = React.useState("ستانلس ستيل طبي ألماني (Medical Grade 316L)");
-  const [autoclavable, setAutoclavable] = React.useState("نعم - أوتوكلاف حتى 134° مئوية");
+  const [material, setMaterial] = React.useState("فولاذ ستانلس ستيل طبي وصناعي (Grade 316L)");
+  const [autoclavable, setAutoclavable] = React.useState("نعم - أوتوكلاف وحرارة حتى 134° مئوية");
   const [origin, setOrigin] = React.useState("ألمانيا / معتمد CE & ISO 13485");
   const [warranty, setWarranty] = React.useState("ضمان عام ضد عيوب الصناعة والصدأ");
 
@@ -90,8 +102,8 @@ export default function AdminProductsPage() {
     setStock("20");
     setImageUrl("");
     setDescription("");
-    setMaterial("ستانلس ستيل طبي ألماني (Medical Grade 316L)");
-    setAutoclavable("نعم - أوتوكلاف حتى 134° مئوية");
+    setMaterial("فولاذ ستانلس ستيل طبي وصناعي (Grade 316L)");
+    setAutoclavable("نعم - أوتوكلاف وحرارة حتى 134° مئوية");
     setOrigin("ألمانيا / معتمد CE & ISO 13485");
     setWarranty("ضمان عام ضد عيوب الصناعة والصدأ");
     setIsModalOpen(true);
@@ -106,8 +118,8 @@ export default function AdminProductsPage() {
     setStock(prod.stock.toString());
     setImageUrl(prod.image_url || "");
     setDescription(prod.description || "");
-    setMaterial(prod.specifications?.material || "ستانلس ستيل طبي ألماني (Medical Grade 316L)");
-    setAutoclavable(prod.specifications?.autoclavable || "نعم - أوتوكلاف حتى 134° مئوية");
+    setMaterial(prod.specifications?.material || "فولاذ ستانلس ستيل طبي وصناعي (Grade 316L)");
+    setAutoclavable(prod.specifications?.autoclavable || "نعم - أوتوكلاف وحرارة حتى 134° مئوية");
     setOrigin(prod.specifications?.origin || "ألمانيا / معتمد CE & ISO 13485");
     setWarranty(prod.specifications?.warranty || "ضمان عام ضد عيوب الصناعة والصدأ");
     setIsModalOpen(true);
@@ -144,7 +156,7 @@ export default function AdminProductsPage() {
       autoclavable: autoclavable.trim(),
       origin: origin.trim(),
       warranty: warranty.trim(),
-      intendedUse: "عيادات ومراكز طب وجراحة الأسنان",
+      intendedUse: "استخدامات الورش، المراكز، والعيادات التخصصية",
     };
 
     if (editingProduct) {
@@ -159,7 +171,7 @@ export default function AdminProductsPage() {
         image_url: imageUrl.trim() || editingProduct.image_url,
         description: description.trim() || null,
         specifications: specs,
-        updated_at: "2026-10-16T15:00:00Z",
+        updated_at: "2026-10-18T10:00:00Z",
       };
 
       try {
@@ -184,15 +196,15 @@ export default function AdminProductsPage() {
       toast.success("تم حفظ التعديلات بنجاح وستظهر للزوار فوراً!");
     } else {
       // Create new
-      const newId = `prod-dental-${Math.floor(1000 + Math.random() * 9000)}`;
-      const slug = `dental-${Date.now()}`;
+      const newId = `prod-tool-${Math.floor(1000 + Math.random() * 9000)}`;
+      const slug = `tool-${Date.now()}`;
       const newProd: Product = {
         id: newId,
-        created_at: "2026-10-16T15:00:00Z",
-        updated_at: "2026-10-16T15:00:00Z",
+        created_at: "2026-10-18T10:00:00Z",
+        updated_at: "2026-10-18T10:00:00Z",
         name: name.trim(),
         slug: slug,
-        category_id: "surgical-instruments",
+        category_id: categorySlugMap[categoryName] || "surgical-instruments",
         category_name: categoryName,
         price: Number(price),
         compare_at_price: comparePrice ? Number(comparePrice) : null,
@@ -248,14 +260,14 @@ export default function AdminProductsPage() {
   return (
     <div className="p-6 lg:p-8 space-y-8 text-right max-w-7xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-black text-white flex items-center gap-2.5 tracking-tight">
-            <Package className="h-7 w-7 text-cyan-400" />
-            <span>إدارة منتجات وأدوات الأسنان والمخزون</span>
+          <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2.5 tracking-tight">
+            <Package className="h-7 w-7 text-orange-600" />
+            <span>إدارة المنتجات والأدوات والمخزون</span>
           </h1>
-          <p className="text-xs lg:text-sm text-slate-400 mt-1">
-            أي أداة أو مستحضر تضيفه أو تعدله هنا يظهر لزوار المتجر والعيادات والمراكز فوراً
+          <p className="text-xs lg:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            أي أداة أو قطعة تضيفها أو تعدلها هنا تظهر لزوار المتجر والمشترين فوراً
           </p>
         </div>
 
@@ -263,15 +275,15 @@ export default function AdminProductsPage() {
           <button
             onClick={loadProducts}
             disabled={isRefreshing}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#111e38] hover:bg-[#16274a] text-slate-200 text-xs font-bold transition-colors border border-slate-700/60 cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#111e38] hover:bg-slate-50 dark:hover:bg-[#16274a] text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors border border-slate-200 dark:border-slate-700/60 cursor-pointer shadow-sm"
           >
-            <RefreshCw className={`h-3.5 w-3.5 text-cyan-400 ${isRefreshing ? "animate-spin" : ""}`} />
+            <RefreshCw className={`h-3.5 w-3.5 text-orange-600 ${isRefreshing ? "animate-spin" : ""}`} />
             <span>تحديث القائمة</span>
           </button>
 
-          <Button onClick={handleOpenAdd} className="gap-2 text-xs font-bold shadow-lg shadow-cyan-900/30">
+          <Button onClick={handleOpenAdd} className="gap-2 text-xs font-bold shadow-md shadow-orange-600/20">
             <Plus className="h-4 w-4" />
-            <span>إضافة أداة / منتج جديد</span>
+            <span>إضافة أداة جديدة</span>
           </Button>
         </div>
       </div>
@@ -279,32 +291,38 @@ export default function AdminProductsPage() {
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="relative w-full sm:max-w-md">
-          <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-cyan-400" />
+          <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-orange-500" />
           <input
             type="text"
-            placeholder="ابحث بالاسم أو القسم أو الأداة..."
+            placeholder="ابحث بالاسم أو القسم أو كود الأداة..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-11 pr-10 pl-4 rounded-xl bg-[#0e172c] border border-slate-700/70 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 shadow-inner"
+            className="w-full h-11 pr-10 pl-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-orange-500 shadow-sm"
           />
         </div>
 
         {/* Category Pills */}
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1">
           {[
-            { id: "all", label: "جميع الأدوات" },
+            { id: "all", label: "جميع الأصناف" },
             { id: "low_stock", label: "أوشك على النفاد ⚠️" },
-            { id: "جراحة", label: "أدوات جراحة وخلع" },
-            { id: "حشوات", label: "حشوات وبنج" },
+            { id: "جراحة", label: "جراحة وخلع" },
+            { id: "حشوات", label: "حشوات وعلاج جذور" },
+            { id: "فحص", label: "فحص ولثة" },
+            { id: "قبضات", label: "قبضات وتوربينات" },
+            { id: "بنج", label: "بنج وتخدير" },
+            { id: "طبعات", label: "طبعات وتركيبات" },
+            { id: "تقويم", label: "تقويم الأسنان" },
             { id: "تعقيم", label: "تعقيم ومكافحة عدوى" },
+            { id: "مستهلكات", label: "مستهلكات العيادة" },
           ].map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-sm ${
                 selectedCategory === cat.id
-                  ? "bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-cyan-900/40 border border-cyan-400/40"
-                  : "bg-[#0e172c] text-slate-300 hover:text-white border border-slate-800 hover:bg-[#121e38]"
+                  ? "bg-orange-600 text-white shadow-orange-600/30 border border-orange-500"
+                  : "bg-white text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
               {cat.label}
@@ -313,26 +331,26 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      {/* Products Table with Enhanced Medical Colors */}
-      <div className="rounded-2xl bg-gradient-to-b from-[#0e172c] to-[#0a1021] border border-slate-800/90 overflow-hidden shadow-xl">
+      {/* Products Table */}
+      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-right">
             <thead>
-              <tr className="border-b border-slate-800 bg-[#121e38]/80 text-slate-300">
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300">
                 <th className="py-3.5 px-4 font-bold rounded-r-xl">المنتج / الأداة</th>
                 <th className="py-3.5 px-4 font-bold">القسم</th>
-                <th className="py-3.5 px-4 font-bold">السعر للعيادات</th>
+                <th className="py-3.5 px-4 font-bold">السعر</th>
                 <th className="py-3.5 px-4 font-bold">المخزون</th>
                 <th className="py-3.5 px-4 font-bold">حالة العرض</th>
                 <th className="py-3.5 px-4 font-bold text-center rounded-l-xl">إجراءات</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredProducts.map((prod) => (
-                <tr key={prod.id} className="hover:bg-cyan-950/20 transition-colors">
+                <tr key={prod.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-xl bg-[#142344] border border-slate-700/60 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+                      <div className="h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                         {prod.image_url ? (
                           <img
                             src={prod.image_url}
@@ -340,34 +358,29 @@ export default function AdminProductsPage() {
                             className="h-full w-full object-contain p-1"
                           />
                         ) : (
-                          <span className="text-xl">🦷</span>
+                          <span className="text-xl">⚙️</span>
                         )}
                       </div>
                       <div className="space-y-0.5">
-                        <span className="font-extrabold text-white line-clamp-1">
+                        <span className="font-bold text-slate-900 dark:text-white line-clamp-1">
                           {prod.name}
                         </span>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-cyan-400 font-mono">
+                          <span className="text-[10px] text-orange-600 dark:text-orange-400 font-mono font-bold">
                             {prod.id}
                           </span>
-                          {prod.specifications?.autoclavable?.includes("134") && (
-                            <span className="text-[9px] font-bold text-teal-400 bg-teal-950/80 px-1.5 py-0.2 rounded border border-teal-800/80">
-                              أوتوكلاف 134°
-                            </span>
-                          )}
                         </div>
                       </div>
                     </div>
                   </td>
 
                   <td className="py-3.5 px-4">
-                    <span className="px-2.5 py-1 rounded-lg bg-[#142344] text-cyan-300 text-[11px] font-bold border border-cyan-900/50">
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 text-[11px] font-bold border border-slate-200 dark:border-slate-700">
                       {prod.category_name}
                     </span>
                   </td>
 
-                  <td className="py-3.5 px-4 font-black text-emerald-400 text-sm">
+                  <td className="py-3.5 px-4 font-black text-slate-900 dark:text-white text-sm">
                     {formatCurrency(prod.price)}
                     {prod.compare_at_price && (
                       <span className="block text-[10px] text-slate-400 line-through font-normal">
@@ -378,10 +391,10 @@ export default function AdminProductsPage() {
 
                   <td className="py-3.5 px-4">
                     <span
-                      className={`font-black px-2.5 py-1 rounded-lg text-[11px] border ${
+                      className={`font-bold px-2.5 py-1 rounded-lg text-[11px] border ${
                         prod.stock <= 5
-                          ? "bg-rose-950/70 text-rose-300 border-rose-800"
-                          : "bg-[#111e38] text-slate-200 border-slate-700"
+                          ? "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/70 dark:text-rose-300 dark:border-rose-800"
+                          : "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
                       }`}
                     >
                       {prod.stock} قطع
@@ -393,8 +406,8 @@ export default function AdminProductsPage() {
                       onClick={() => toggleStatus(prod)}
                       className={`text-[11px] font-bold px-2.5 py-1 rounded-full border cursor-pointer transition-colors ${
                         prod.is_active
-                          ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/25"
-                          : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40"
+                          : "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
                       }`}
                     >
                       {prod.is_active ? "معروض بالمتجر" : "مخفي مؤقتاً"}
@@ -405,14 +418,14 @@ export default function AdminProductsPage() {
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={() => handleOpenEdit(prod)}
-                        className="p-2 rounded-xl bg-[#111e38] hover:bg-cyan-950 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition-colors cursor-pointer"
+                        className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-orange-600 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
                         title="تعديل تفاصيل الأداة"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(prod.id, prod.name)}
-                        className="p-2 rounded-xl bg-[#111e38] hover:bg-rose-950 text-slate-400 hover:text-rose-300 border border-slate-700/60 transition-colors cursor-pointer"
+                        className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950 text-slate-500 hover:text-rose-600 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
                         title="حذف الأداة"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -426,39 +439,43 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      {/* Add / Edit Product Modal with Dental Specifications */}
+      {/* Add / Edit Product Modal */}
       <Dialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingProduct ? "تعديل بيانات ومواصفات أداة الأسنان" : "إضافة منتج طبي جديد للكتالوج"}
-        description="أدخل تفاصيل الأداة الجراحية، مادة الصنع، معايير الأوتوكلاف، وسعر البيع"
-        className="bg-[#0e172c] border-slate-700 text-white max-w-2xl max-h-[90vh] overflow-y-auto"
+        title={editingProduct ? "تعديل بيانات ومواصفات الأداة" : "إضافة أداة / منتج جديد للكتالوج"}
+        description="أدخل تفاصيل الأداة، مادة الصنع، المواصفات الفنية، وسعر البيع"
+        className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white max-w-2xl max-h-[90vh] overflow-y-auto"
       >
         <form onSubmit={handleSaveProduct} className="space-y-4 pt-2 text-right">
           <Input
-            label="اسم المنتج الطبي أو الأداة بالكامل *"
-            placeholder="مثال: طقم كابلات خلع أسنان فك علوي وسفلي بريميوم"
+            label="اسم الأداة أو المعدة بالكامل *"
+            placeholder="مثال: طقم كابلات خلع ومعدات بريميوم"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="bg-[#091020] border-slate-700 text-white"
+            className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
           />
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                القسم الطبي والتصنيف *
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                التصنيف والقسم *
               </label>
               <select
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-                className="w-full h-11 rounded-xl bg-[#091020] border border-slate-700 text-white px-3 text-xs focus:outline-none focus:border-cyan-500"
+                className="w-full h-11 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-3 text-xs focus:outline-none focus:border-orange-500"
               >
                 <option value="أدوات جراحة وخلع">أدوات جراحة وخلع</option>
-                <option value="حشوات وترميم">حشوات وترميم</option>
+                <option value="حشوات وعلاج جذور">حشوات وعلاج جذور</option>
+                <option value="فحص وتشخيص ولثة">فحص وتشخيص ولثة</option>
+                <option value="قبضات وتوربينات وأجهزة">قبضات وتوربينات وأجهزة</option>
+                <option value="بنج وتخدير موضعي">بنج وتخدير موضعي</option>
+                <option value="طبعات وتركيبات وتثبيت">طبعات وتركيبات وتثبيت</option>
+                <option value="تقويم الأسنان">تقويم الأسنان</option>
                 <option value="تعقيم ومكافحة عدوى">تعقيم ومكافحة عدوى</option>
-                <option value="أدوات الفحص والتشخيص">أدوات الفحص والتشخيص</option>
-                <option value="مستهلكات العيادة">مستهلكات العيادة</option>
+                <option value="مستهلكات ووقايات العيادة">مستهلكات ووقايات العيادة</option>
               </select>
             </div>
 
@@ -470,19 +487,19 @@ export default function AdminProductsPage() {
               value={stock}
               onChange={(e) => setStock(e.target.value)}
               required
-              className="bg-[#091020] border-slate-700 text-white"
+              className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <Input
-              label="سعر البيع للعيادات (ج.م) *"
+              label="سعر البيع (ج.م) *"
               type="number"
               placeholder="1250"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               required
-              className="bg-[#091020] border-slate-700 text-white"
+              className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             />
             <Input
               label="السعر قبل الخصم (اختياري)"
@@ -490,48 +507,48 @@ export default function AdminProductsPage() {
               placeholder="1400"
               value={comparePrice}
               onChange={(e) => setComparePrice(e.target.value)}
-              className="bg-[#091020] border-slate-700 text-white"
+              className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             />
           </div>
 
-          {/* Dental Specifications Group */}
-          <div className="p-3.5 rounded-2xl bg-[#091020] border border-slate-700/80 space-y-3">
-            <h4 className="text-xs font-black text-cyan-400 flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>المواصفات الفنية لطب الأسنان (تظهر في نافذة التفاصيل):</span>
+          {/* Technical Specifications */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-3">
+            <h4 className="text-xs font-black text-orange-600 dark:text-orange-400 flex items-center gap-1.5">
+              <Wrench className="h-3.5 w-3.5" />
+              <span>المواصفات الفنية للأداة:</span>
             </h4>
 
             <div className="grid grid-cols-2 gap-3">
               <Input
                 label="مادة الصنع"
-                placeholder="ستانلس ستيل طبي ألماني (Medical Grade 316L)"
+                placeholder="فولاذ ستانلس ستيل طبي وصناعي 316L"
                 value={material}
                 onChange={(e) => setMaterial(e.target.value)}
-                className="bg-[#0e172c] border-slate-700 text-xs text-white"
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs"
               />
               <Input
-                label="التعقيم بالأوتوكلاف"
+                label="التحمل والتعقيم"
                 placeholder="نعم - أوتوكلاف حتى 134° مئوية"
                 value={autoclavable}
                 onChange={(e) => setAutoclavable(e.target.value)}
-                className="bg-[#0e172c] border-slate-700 text-xs text-white"
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <Input
                 label="بلد المنشأ والجودة"
-                placeholder="ألمانيا / معتمد CE & ISO 13485"
+                placeholder="ألمانيا / معتمد CE & ISO"
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
-                className="bg-[#0e172c] border-slate-700 text-xs text-white"
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs"
               />
               <Input
-                label="الضمان الطبي"
-                placeholder="ضمان 3 سنوات ضد الكسر والصدأ"
+                label="الضمان المعتمد"
+                placeholder="ضمان عام ضد عيوب الصناعة والصدأ"
                 value={warranty}
                 onChange={(e) => setWarranty(e.target.value)}
-                className="bg-[#0e172c] border-slate-700 text-xs text-white"
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs"
               />
             </div>
           </div>
@@ -541,32 +558,32 @@ export default function AdminProductsPage() {
             placeholder="https://images.unsplash.com/..."
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
-            className="bg-[#091020] border-slate-700 text-white text-left font-mono text-xs"
+            className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-left font-mono text-xs"
             dir="ltr"
           />
 
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5">
-              الوصف الطبي للأداة وكيفية استخدامها
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+              الوصف الفني للأداة
             </label>
             <textarea
               rows={3}
-              placeholder="وصف طبي دقيق لميزات الأداة وملاءمتها لجراحات وتخصصات الفم والأسنان..."
+              placeholder="وصف فني لميزات الأداة وملاءمتها للاستخدامات الهندسية أو الطبية..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-xl bg-[#091020] border border-slate-700 text-white p-3 text-xs focus:outline-none focus:border-cyan-500 resize-none"
+              className="w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white p-3 text-xs focus:outline-none focus:border-orange-500 resize-none"
             />
           </div>
 
           <div className="pt-3 flex gap-2">
-            <Button type="submit" className="flex-1 font-bold shadow-lg shadow-cyan-900/30">
+            <Button type="submit" className="flex-1 font-bold shadow-md shadow-orange-600/20">
               {editingProduct ? "حفظ التعديلات" : "إضافة الأداة للمتجر"}
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={() => setIsModalOpen(false)}
-              className="border-slate-700 bg-[#111e38] text-slate-300 hover:bg-[#16274a]"
+              className="border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
             >
               إلغاء
             </Button>

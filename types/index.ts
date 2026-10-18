@@ -16,4 +16,6 @@ export interface GuestCheckoutInput {
   city: string;
   notes?: string;
   paymentMethod: "cash_on_delivery" | "vodafone_cash" | "instapay";
+  senderPhone?: string;
+  paymentProofUrl?: string;
 }

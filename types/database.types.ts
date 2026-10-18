@@ -55,6 +55,8 @@ export type Order = {
   payment_method: PaymentMethod;
   payment_status: PaymentStatus;
   status: OrderStatus;
+  sender_phone?: string | null;
+  payment_proof_url?: string | null;
 };
 
 export type OrderItem = {
@@ -137,6 +139,8 @@ export type Database = {
           payment_method: PaymentMethod;
           payment_status?: PaymentStatus;
           status?: OrderStatus;
+          sender_phone?: string | null;
+          payment_proof_url?: string | null;
         };
         Update: {
           id?: string;
@@ -151,6 +155,8 @@ export type Database = {
           payment_method?: PaymentMethod;
           payment_status?: PaymentStatus;
           status?: OrderStatus;
+          sender_phone?: string | null;
+          payment_proof_url?: string | null;
         };
         Relationships: [];
       };

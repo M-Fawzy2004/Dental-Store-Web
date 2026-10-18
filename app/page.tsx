@@ -2,15 +2,15 @@
 
 import * as React from "react";
 import {
-  Sparkles,
+  Wrench,
   ShieldCheck,
   Truck,
   CreditCard,
   Headphones,
   Search,
   FilterX,
-  Stethoscope,
-  Award,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import { Product } from "@/types";
 import { supabase } from "@/lib/supabase/client";
@@ -39,11 +39,10 @@ export default function HomePage() {
         if (!error && data && data.length > 0) {
           setProducts(data as Product[]);
         } else {
-          // Keep mock products if Supabase table is empty or error
           setProducts(initialMockProducts);
         }
       } catch (err) {
-        console.warn("Using local dental catalog fallback:", err);
+        console.warn("Using local tools catalog fallback:", err);
         setProducts(initialMockProducts);
       } finally {
         setLoading(false);
@@ -59,12 +58,21 @@ export default function HomePage() {
       const matchesCategory =
         selectedCategory === "all" ||
         product.category_id === selectedCategory ||
-        product.slug.includes(selectedCategory);
+        product.slug.includes(selectedCategory) ||
+        (selectedCategory === "surgical-instruments" && product.category_name?.includes("جراحة")) ||
+        (selectedCategory === "restorative-endodontics" && (product.category_name?.includes("حشوات") || product.category_name?.includes("جذور"))) ||
+        (selectedCategory === "diagnostic-periodontics" && (product.category_name?.includes("فحص") || product.category_name?.includes("لثة"))) ||
+        (selectedCategory === "handpieces-equipment" && (product.category_name?.includes("قبضات") || product.category_name?.includes("أجهزة") || product.category_name?.includes("توربين"))) ||
+        (selectedCategory === "anesthesia-syringes" && (product.category_name?.includes("بنج") || product.category_name?.includes("تخدير"))) ||
+        (selectedCategory === "impression-prosthodontics" && (product.category_name?.includes("طبعات") || product.category_name?.includes("تركيبات"))) ||
+        (selectedCategory === "orthodontics" && product.category_name?.includes("تقويم")) ||
+        (selectedCategory === "sterilization-infection-control" && product.category_name?.includes("تعقيم")) ||
+        (selectedCategory === "disposables" && (product.category_name?.includes("مستهلكات") || product.category_name?.includes("وقايات")));
 
       const matchesSearch =
         searchQuery.trim() === "" ||
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.category_name && product.category_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (product.description &&
           product.description.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -73,49 +81,49 @@ export default function HomePage() {
   }, [products, selectedCategory, searchQuery]);
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-[#0b1329] pb-24 text-right">
-      {/* Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#0b3c49] via-[#0b2b3a] to-[#0b1329] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b border-cyan-900/40">
-        {/* Abstract Background Accents */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -right-24 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl pointer-events-none" />
+    <main className="min-h-screen bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 pb-24 text-right transition-colors duration-200">
+      {/* Hero Banner - Engineering Precision Look */}
+      <section className="relative overflow-hidden bg-slate-900 text-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+        {/* Subtle Engineering Grid Background */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#f97316_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 -right-24 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative mx-auto max-w-5xl text-center space-y-6">
           {/* Top Pill */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/15 border border-cyan-400/40 px-4 py-1.5 text-xs sm:text-sm font-bold text-cyan-300 backdrop-blur-md shadow-lg shadow-cyan-950/40">
-            <Sparkles className="h-4 w-4 text-cyan-300 animate-pulse" />
-            <span>المتجر التخصصي الأول لأدوات ومستلزمات طب الأسنان في مصر</span>
+          <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/15 border border-orange-500/30 px-4 py-1.5 text-xs sm:text-sm font-bold text-orange-400 backdrop-blur-md">
+            <Wrench className="h-4 w-4 text-orange-400" />
+            <span>متجر توريدات ومستلزمات وأدوات طب وجراحة الأسنان المتخصصة في مصر</span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-            أدوات جراحة وحشوات الأسنان
+            أدوات ومستلزمات أسنان احترافية
             <br />
-            <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-emerald-300 bg-clip-text text-transparent">
-              بأعلى معايير التعقيم والجودة الطبية
+            <span className="text-orange-500">
+              بأعلى معايير التعقيم والصلابة الطبية المعتمدة
             </span>
           </h1>
 
-          <p className="mx-auto max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-            نوفر لأطباء وجراحي الأسنان والمراكز المتخصصة أجود أدوات الستانلس ستيل الألماني القابل للتعقيم 134°C، حشوات الكومبوزيت، البنج الموضعي، والمستهلكات بأفضل أسعار وشحن مباشر لباب العيادة.
+          <p className="mx-auto max-w-2xl text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+            نوفر لأطباء وجراحي الأسنان والمراكز المتخصصة تشكيلة شاملة لجميع التخصصات: كابلات خلع وروافع، حشوات وعلاج جذور، قبضات وتوربينات، بنج موضعي، طبعات وتركيبات، تقويم ومستهلكات تعقيم بأفضل أسعار الجملة مع الشحن المباشر والمعاينة قبل الاستلام.
           </p>
 
           {/* Quick Search on Hero */}
           <div className="mx-auto max-w-xl pt-2">
             <div className="relative flex items-center">
-              <Search className="absolute right-4 h-5 w-5 text-cyan-300" />
+              <Search className="absolute right-4 h-5 w-5 text-orange-400" />
               <input
                 type="text"
-                placeholder="ابحث عن أداة معينة (مثال: كابلات خلع، توربين، حشوة Filtek، بنج أرتيكايين)..."
+                placeholder="ابحث في جميع أصناف الأسنان (مثال: كابلات خلع، توربين، حشوات، بنج، روتاري، أكياس تعقيم، رابر دام، أرجينات)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-13 pr-12 pl-14 rounded-2xl bg-white/10 backdrop-blur-md border border-cyan-400/30 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:bg-white/15 text-sm transition-all shadow-xl"
+                className="w-full h-12 pr-12 pl-14 rounded-2xl bg-slate-800/90 border border-slate-700 text-white placeholder:text-slate-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 text-xs sm:text-sm transition-all shadow-lg"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute left-4 text-xs font-bold text-cyan-300 hover:text-white bg-white/10 px-2 py-1 rounded-md cursor-pointer"
+                  className="absolute left-4 text-xs font-bold text-orange-400 hover:text-white bg-slate-700 px-2 py-1 rounded-md cursor-pointer"
                 >
                   مسح
                 </button>
@@ -124,44 +132,44 @@ export default function HomePage() {
           </div>
 
           {/* Trust Value Props */}
-          <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 text-right">
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/20 text-teal-300">
-                <ShieldCheck className="h-6 w-6 flex-shrink-0" />
+          <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-right">
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-800/80 border border-slate-700/80">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400">
+                <ShieldCheck className="h-5 w-5 flex-shrink-0" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">ستانلس ستيل طبي</h4>
-                <p className="text-[10px] text-slate-300">مقاوم للصدأ أوتوكلاف 134°</p>
+                <h4 className="text-xs font-bold text-white">خامات أصلية</h4>
+                <p className="text-[10px] text-slate-400">مطابقة للمواصفات</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-300">
-                <Truck className="h-6 w-6 flex-shrink-0" />
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-800/80 border border-slate-700/80">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/20 text-blue-400">
+                <Truck className="h-5 w-5 flex-shrink-0" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">شحن سريع ومباشر</h4>
-                <p className="text-[10px] text-slate-300">لباب العيادة بكافة المحافظات</p>
+                <h4 className="text-xs font-bold text-white">شحن سريع</h4>
+                <p className="text-[10px] text-slate-400">معاينة قبل الدفع</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300">
-                <CreditCard className="h-6 w-6 flex-shrink-0" />
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-800/80 border border-slate-700/80">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
+                <CreditCard className="h-5 w-5 flex-shrink-0" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">دفع مريح عند الاستلام</h4>
-                <p className="text-[10px] text-slate-300">كاش أو انستاباي وفودافون</p>
+                <h4 className="text-xs font-bold text-white">دفع يدوي مريح</h4>
+                <p className="text-[10px] text-slate-400">إنستاباي / فودافون / كاش</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 text-amber-300">
-                <Headphones className="h-6 w-6 flex-shrink-0" />
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-800/80 border border-slate-700/80">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400">
+                <Headphones className="h-5 w-5 flex-shrink-0" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">طلب وتأكيد واتساب</h4>
-                <p className="text-[10px] text-slate-300">متابعة فورية 01068808559</p>
+                <h4 className="text-xs font-bold text-white">واتساب فوري</h4>
+                <p className="text-[10px] text-slate-400">01068808559</p>
               </div>
             </div>
           </div>
@@ -169,20 +177,20 @@ export default function HomePage() {
       </section>
 
       {/* Main Catalog Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
         {/* Category Filter Tabs */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-6 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                كتالوج أدوات ومستلزمات الأسنان
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
+                كتالوج الأدوات والمعدات
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                اختر التصنيف الطبي المطلوب للاطلاع على المواصفات والأسعار
+                اختر التصنيف المطلوب للاطلاع على المنتجات والمواصفات
               </p>
             </div>
-            <span className="text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-950/80 px-3 py-1.5 rounded-xl border border-cyan-200 dark:border-cyan-800">
-              {filteredProducts.length} منتج متوفر
+            <span className="text-xs font-bold text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/80 px-3 py-1.5 rounded-xl border border-orange-200 dark:border-orange-800">
+              {filteredProducts.length} صنف متوفر
             </span>
           </div>
 
@@ -194,7 +202,7 @@ export default function HomePage() {
 
         {/* Product Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 min-[460px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -204,16 +212,16 @@ export default function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-12 text-center space-y-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400">
-              <FilterX className="h-8 w-8" />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-12 text-center space-y-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400">
+              <FilterX className="h-6 w-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
+              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
                 لا توجد نتائج مطابقة لبحثك
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md">
-                لم نتمكن من العثور على منتجات مطابقة لـ &quot;{searchQuery}&quot; في هذا القسم. حاول استخدام كلمات بحث أخرى أو إعادة ضبط الفلتر.
+                لم نتمكن من العثور على منتجات مطابقة لـ &quot;{searchQuery}&quot; في هذا القسم. حاول استخدام كلمات بحث أخرى أو عرض كل الأصناف.
               </p>
             </div>
             <button
@@ -221,15 +229,15 @@ export default function HomePage() {
                 setSearchQuery("");
                 setSelectedCategory("all");
               }}
-              className="text-xs font-bold text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 underline underline-offset-4 cursor-pointer"
+              className="text-xs font-bold text-orange-600 hover:text-orange-700 dark:text-orange-400 underline underline-offset-4 cursor-pointer"
             >
-              عرض جميع أدوات الكتالوج
+              عرض جميع الأصناف
             </button>
           </div>
         )}
       </section>
 
-      {/* Product Details Modal (Dental Tool Specs, Autoclave, Origin, WhatsApp) */}
+      {/* Product Details Modal */}
       <ProductDetailsModal
         product={selectedProduct}
         isOpen={!!selectedProduct}

@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #f8fafc;
+  --background: #ffffff;
   --foreground: #0f172a;
+}
+
+.dark {
+  --background: #090d16;
+  --foreground: #f8fafc;
 }
 
 @theme inline {
@@ -12,7 +19,83 @@
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-cairo), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* =========================================================================
+   Print Styles for Amazon-Style Clean PDF Invoices
+   ========================================================================= */
+@media print {
+  /* Hide all website chrome, headers, footers, sidebars, buttons, mobile bars, toasts & floating notifications */
+  header,
+  footer,
+  nav,
+  aside,
+  button,
+  .no-print,
+  .hide-on-print,
+  .mobile-bottom-nav,
+  [data-sonner-toaster],
+  [data-sonner-toast],
+  section[aria-label*="Notifications"],
+  div[role="region"][aria-label*="Notifications"],
+  div:has(> [data-sonner-toast]),
+  .toaster,
+  .toast,
+  div[role="status"],
+  div[role="alert"],
+  a[href*="wa.me"],
+  a[href*="tel:"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* Reset document background to pure white and black text */
+  html,
+  body,
+  main {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 10pt !important;
+  }
+
+  /* Ensure background colors and borders are preserved */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Page setup for standard single A4 page */
+  @page {
+    size: A4 portrait;
+    margin: 5mm 6mm;
+  }
+
+  /* Only display the printable invoice container */
+  .printable-invoice-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  .print-page-break {
+    page-break-inside: avoid;
+  }
+}
+

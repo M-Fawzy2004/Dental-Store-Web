@@ -10,11 +10,10 @@ import {
   Phone,
   MessageCircle,
   Truck,
-  Flame,
-  Award,
-  PackageCheck,
   Plus,
   Minus,
+  Ruler,
+  Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Product } from "@/types";
@@ -72,21 +71,21 @@ export function ProductDetailsModal({
   const discountPercent =
     product.compare_at_price && product.compare_at_price > product.price
       ? Math.round(
-          ((product.compare_at_price - product.price) / product.compare_at_price) * 100
-        )
+        ((product.compare_at_price - product.price) / product.compare_at_price) * 100
+      )
       : null;
 
   const specs = product.specifications || {
-    material: "ستانلس ستيل طبي ألماني مقاوم للصدأ (Medical Grade 316L)",
-    autoclavable: "نعم - أوتوكلاف حتى 134° مئوية",
-    origin: "ألمانيا / معتمد طبياً CE و ISO 13485",
-    warranty: "ضمان عام ضد عيوب الصناعة",
-    packaging: "عبوة طبية معقمة مختومة",
-    intendedUse: "عيادات ومراكز طب وجراحة الفم والأسنان",
+    material: "ستانلس ستيل طبي وصناعي معتمد (Grade 316L)",
+    autoclavable: "نعم - أوتوكلاف وحرارة حتى 134° مئوية",
+    origin: "ألمانيا / معتمد بمواصفات الجودة CE و ISO",
+    warranty: "ضمان ضد عيوب الصناعة والتآكل",
+    packaging: "عبوة محكمة الإغلاق",
+    intendedUse: "استخدامات الورش، المراكز والعيادات التخصصية",
   };
 
   const whatsappMessage = encodeURIComponent(
-    `مرحباً متجر دينتال كير، أرغب في الاستفسار والطلب المباشر للمنتج التالي:\n🦷 *${product.name}*\n🏷️ السعر: ${formatCurrency(product.price)}\n📦 الكمية المطلوبة: ${quantity}\nهل المنتج متوفر للشحن الفوري لعيادتي؟`
+    `مرحباً، أرغب في الاستفسار والطلب المباشر للأداة التالية:\n🔧 *${product.name}*\n🏷️ السعر: ${formatCurrency(product.price)}\n📦 الكمية: ${quantity}\nهل متوفر للشحن الفوري؟`
   );
 
   return (
@@ -111,10 +110,10 @@ export function ProductDetailsModal({
 
         <div className="grid grid-cols-1 md:grid-cols-12 max-h-[85vh] overflow-y-auto">
           {/* Image & Badges Column (5 cols) */}
-          <div className="md:col-span-5 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800/80 dark:to-slate-900/90 p-8 flex flex-col justify-between items-center relative border-b md:border-b-0 md:border-l border-slate-200 dark:border-slate-800">
+          <div className="md:col-span-5 bg-slate-50 dark:bg-slate-800/60 p-8 flex flex-col justify-between items-center relative border-b md:border-b-0 md:border-l border-slate-200 dark:border-slate-800">
             {/* Top Badges */}
             <div className="w-full flex items-center justify-between gap-2">
-              <span className="text-[11px] font-bold text-cyan-700 dark:text-cyan-400 bg-cyan-100 dark:bg-cyan-950/80 px-2.5 py-1 rounded-lg">
+              <span className="text-[11px] font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/80 px-2.5 py-1 rounded-lg border border-orange-200 dark:border-orange-800">
                 {product.category_name}
               </span>
               {discountPercent && (
@@ -125,7 +124,7 @@ export function ProductDetailsModal({
             </div>
 
             {/* Product Image */}
-            <div className="my-6 aspect-square w-full max-w-[260px] flex items-center justify-center p-3">
+            <div className="my-6 aspect-square w-full max-w-[240px] flex items-center justify-center p-3">
               {product.image_url ? (
                 <img
                   src={product.image_url}
@@ -133,19 +132,19 @@ export function ProductDetailsModal({
                   className="h-full w-full object-contain rounded-xl hover:scale-105 transition-transform duration-300"
                 />
               ) : (
-                <span className="text-6xl">🦷</span>
+                <span className="text-6xl">⚙️</span>
               )}
             </div>
 
             {/* Trust Badges */}
-            <div className="w-full space-y-2 pt-4 border-t border-slate-200 dark:border-slate-800 text-[11px]">
+            <div className="w-full space-y-2 pt-4 border-t border-slate-200 dark:border-slate-700 text-[11px]">
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <ShieldCheck className="h-4 w-4 text-teal-600 flex-shrink-0" />
-                <span>أصلي ومطابق للمواصفات الطبية</span>
+                <ShieldCheck className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                <span>خامات أصلية مطابقة للمواصفات</span>
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <Truck className="h-4 w-4 text-cyan-600 flex-shrink-0" />
-                <span>شحن سريع ومعاينة قبل الاستلام</span>
+                <Truck className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                <span>شحن سريع ومعاينة قبل الدفع</span>
               </div>
             </div>
           </div>
@@ -160,7 +159,7 @@ export function ProductDetailsModal({
                     {isOutOfStock ? "غير متوفر بالمخزن" : `متوفر بالمخزن (${product.stock} قطع)`}
                   </Badge>
                   <span className="text-[11px] text-slate-400 font-mono">
-                    ID: {product.id.slice(0, 10)}
+                    SKU: {product.id}
                   </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug">
@@ -168,9 +167,9 @@ export function ProductDetailsModal({
                 </h2>
               </div>
 
-              {/* Pricing */}
-              <div className="flex items-baseline gap-3 p-3.5 rounded-2xl bg-cyan-50/60 dark:bg-cyan-950/40 border border-cyan-100 dark:border-cyan-900/40">
-                <span className="text-2xl sm:text-3xl font-black text-cyan-800 dark:text-cyan-300">
+              {/* Pricing Box */}
+              <div className="flex items-baseline gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
                   {formatCurrency(product.price)}
                 </span>
                 {product.compare_at_price && product.compare_at_price > product.price && (
@@ -179,7 +178,7 @@ export function ProductDetailsModal({
                   </span>
                 )}
                 <span className="text-xs text-slate-500 mr-auto font-medium">
-                  شامل ضريبة القيمة المضافة
+                  شامل الضريبة
                 </span>
               </div>
 
@@ -187,7 +186,7 @@ export function ProductDetailsModal({
               {product.description && (
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    الوصف الطبي:
+                    الوصف الفني:
                   </h4>
                   <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                     {product.description}
@@ -195,36 +194,36 @@ export function ProductDetailsModal({
                 </div>
               )}
 
-              {/* Detailed Dental Specs Grid */}
+              {/* Technical Engineering Specs Grid */}
               <div className="space-y-2 pt-2">
                 <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
+                  <Wrench className="h-3.5 w-3.5 text-orange-600" />
                   <span>المواصفات الفنية للأداة:</span>
                 </h4>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 space-y-0.5">
-                    <span className="text-slate-400 block">مادة الصنع:</span>
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">مادة الصنع:</span>
                     <strong className="text-slate-800 dark:text-slate-200 block truncate">
                       {specs.material}
                     </strong>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 space-y-0.5">
-                    <span className="text-slate-400 block">التعقيم بالأوتوكلاف:</span>
-                    <strong className="text-teal-600 dark:text-teal-400 block truncate">
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">التحمل والتعقيم:</span>
+                    <strong className="text-orange-600 dark:text-orange-400 block truncate">
                       {specs.autoclavable}
                     </strong>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 space-y-0.5">
-                    <span className="text-slate-400 block">بلد المنشأ والجودة:</span>
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">بلد المنشأ والجودة:</span>
                     <strong className="text-slate-800 dark:text-slate-200 block truncate">
                       {specs.origin}
                     </strong>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 space-y-0.5">
-                    <span className="text-slate-400 block">الضمان الطبي:</span>
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">الضمان المعتمد:</span>
                     <strong className="text-emerald-600 dark:text-emerald-400 block truncate">
                       {specs.warranty}
                     </strong>
@@ -234,7 +233,7 @@ export function ProductDetailsModal({
             </div>
 
             {/* Purchase Controls & Actions */}
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
               <div className="flex items-center gap-3">
                 {/* Quantity Selector */}
                 <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-1">
@@ -262,8 +261,7 @@ export function ProductDetailsModal({
                   onClick={handleAddToCart}
                   disabled={isOutOfStock}
                   size="lg"
-                  variant={isAdded ? "accent" : "default"}
-                  className="flex-1 font-bold text-sm shadow-md"
+                  className="flex-1 font-bold text-sm"
                 >
                   {isAdded ? (
                     <>

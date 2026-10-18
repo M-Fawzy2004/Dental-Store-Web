@@ -17,9 +17,9 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#070b16] text-slate-100 flex flex-col lg:flex-row antialiased selection:bg-cyan-500 selection:text-white">
+    <div className="min-h-screen bg-slate-100 dark:bg-[#070b16] text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row antialiased selection:bg-orange-500 selection:text-white transition-colors duration-200">
       <AdminSidebar />
-      <div className="flex-1 min-w-0 flex flex-col bg-[#0a1122] overflow-y-auto min-h-screen">
+      <div className="flex-1 min-w-0 flex flex-col bg-slate-50 dark:bg-[#0a1122] overflow-y-auto min-h-screen transition-colors duration-200">
         {children}
       </div>
     </div>
